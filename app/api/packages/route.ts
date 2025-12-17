@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "../../mongodb";
 import Package from "../../models/Package";
+
 import { Params } from "next/dist/server/request/params";
 
 export async function GET() {
