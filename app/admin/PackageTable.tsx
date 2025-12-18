@@ -24,6 +24,22 @@ export default function PackageTable({ data, onEdit, onDelete }: Props) {
   const [globalFilter, setGlobalFilter] = useState("");
 
   const columns: ColumnDef<Package>[] = [
+  {
+    accessorKey: "imageUrl",
+    header: "Image",
+    cell: ({ row }) => {
+      const url = row.original.imageUrl;
+      return url ? (
+        <img
+          src={url}
+          alt={row.original.name}
+          style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "4px" }}
+        />
+      ) : (
+        <span>No Image</span>
+      );
+    },
+  },
     {
       accessorKey: "name",
       header: "Name",

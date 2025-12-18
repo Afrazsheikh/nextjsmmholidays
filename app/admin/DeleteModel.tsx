@@ -11,6 +11,7 @@ interface Props {
 export default function DeleteModal({ id, onClose, onDeleted }: Props) {
     
     const handleDelete = async () => {
+        console.log(id)
         try {
         console.log(id);
       const res = await fetch(`/api/packages/${id}`, {

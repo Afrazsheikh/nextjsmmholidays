@@ -1,8 +1,10 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import SearchBar from "./helpers/SearchBar";
-
+import "./home.css"
 interface Package {
   id: string;
   name: string;
@@ -16,11 +18,10 @@ const Header = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const pathname = usePathname();
 
-  // hide search bar on admin routes
   const isAdminRoute = pathname.startsWith("/admin");
 
   useEffect(() => {
-    if (isAdminRoute) return; // don't fetch packages for admin
+    if (isAdminRoute) return;
 
     fetch("/packages.json")
       .then((res) => res.json())
@@ -28,18 +29,34 @@ const Header = () => {
       .catch((err) => console.error("Failed to load packages:", err));
   }, [isAdminRoute]);
 
-  const handleSelectPackage = (pkg: Package) => {
-    console.log("Selected package:", pkg);
-  };
-
   return (
-    <header className="header">
-      <div className="logo">MM Holidays</div>
+  <header className="header">
+  <div className="logo">MM Holidays</div>
 
-      {!isAdminRoute && (
-        <SearchBar packages={packages} onSelect={handleSelectPackage} />
-      )}
-    </header>
+  {!isAdminRoute && (
+    <>
+      {/* Center */}
+      <div className="header-center">
+        <SearchBar packages={packages} onSelect={() => {}} />
+      </div>
+
+      {/* Right */}
+      <nav className="nav">
+        <Link href="/" className={pathname === "/" ? "active" : ""}>
+          Home
+        </Link>
+        <Link
+          href="/contact"
+          className={pathname === "/contact" ? "active" : ""}
+        >
+          Contact
+        </Link>
+      </nav>
+    </>
+  )}
+</header>
+
+
   );
 };
 

@@ -1,0 +1,35 @@
+.contact-page {
+  max-width: 700px;
+  margin: auto;
+  padding: 40px 20px;
+  color: #333;
+}
+
+.contact-card {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 16px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.contact-form button {
+  background: #1976d2;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}

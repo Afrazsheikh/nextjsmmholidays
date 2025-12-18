@@ -45,7 +45,9 @@ export default function AdminModal({ data, onClose, onSaved }: Props) {
 
   const [form, setForm] = useState<Package>(emptyPackage);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [loading, setLoading] = useState(false);
+
 const [toast, setToast] = useState<{
   open: boolean;
   message: string;
@@ -93,14 +95,13 @@ const [toast, setToast] = useState<{
     alert("Image upload failed");
   }
 };
-
-
- const handleSave = async () => {
+const handleSave = async () => {
   try {
+    setLoading(true); // start loading
+
     const isEdit = !!form._id;
     const url = isEdit ? `/api/packages/${form._id}` : "/api/packages";
 
-    // Remove _id for new packages
     const payload = { ...form };
     if (!isEdit) delete payload._id;
 
@@ -115,9 +116,42 @@ const [toast, setToast] = useState<{
     onSaved();
   } catch (err) {
     alert("Failed to save package");
+  } finally {
+    setLoading(false); // stop loading
   }
 };
 
+
+//  const handleSave = async () => {
+//   try {
+//     const isEdit = !!form._id;
+//     const url = isEdit ? `/api/packages/${form._id}` : "/api/packages";
+
+//     // Remove _id for new packages
+//     const payload = { ...form };
+//     if (!isEdit) delete payload._id;
+
+//     const res = await fetch(url, {
+//       method: isEdit ? "PUT" : "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(payload),
+//     });
+
+//     if (!res.ok) throw new Error("Save failed");
+
+//     onSaved();
+//   } catch (err) {
+//     alert("Failed to save package");
+//   }
+// };
+const isFormValid = (): boolean => {
+  return (
+    form.name.trim() !== "" &&
+    form.price > 0 &&
+    form.duration.trim() !== "" &&
+    form.imageUrl.trim() !== ""
+  );
+};
 // const handleSave = async () => {
 //   try {
 //     const method = form._id ? "PUT" : "POST";
@@ -176,7 +210,7 @@ const [toast, setToast] = useState<{
             <div style={{ flex: "1 1 30%" }}>
               <TextField
                 label="Price"
-                type="number"
+                type="text"
                 value={form.price}
                 onChange={(e) => updateField("price", Number(e.target.value))}
                 fullWidth
@@ -188,7 +222,7 @@ const [toast, setToast] = useState<{
             <div style={{ flex: "1 1 30%" }}>
               <TextField
                 label="Offer Price"
-                type="number"
+                type="text"
                 value={form.offerPrice}
                 onChange={(e) => updateField("offerPrice", Number(e.target.value))}
                 fullWidth
@@ -222,8 +256,8 @@ const [toast, setToast] = useState<{
                   style={{
                     borderRadius: "8px",
                     border: "1px solid #ccc",
-                    maxWidth: "100%",
-                    height: "auto",
+                    maxWidth: "80%",
+                    height: "40vh",
                   }}
                 />
               )}
@@ -245,7 +279,7 @@ const [toast, setToast] = useState<{
             <div style={{ flex: "1 1 30%" }}>
               <TextField
                 label="Rating"
-                type="number"
+                type="text"
                 value={form.rating}
                 onChange={(e) => updateField("rating", Number(e.target.value))}
                 fullWidth
@@ -257,7 +291,7 @@ const [toast, setToast] = useState<{
             <div style={{ flex: "1 1 30%" }}>
               <TextField
                 label="Reviews"
-                type="number"
+                type="text"
                 value={form.reviews}
                 onChange={(e) => updateField("reviews", Number(e.target.value))}
                 fullWidth
@@ -286,7 +320,7 @@ const [toast, setToast] = useState<{
           >
             Cancel
           </Button>
-          <Button variant="contained" color="primary" onClick={handleSave}>
+          <Button variant="contained" color="primary" onClick={handleSave}   disabled={!isFormValid()}>
             Save
           </Button>
         </DialogActions>

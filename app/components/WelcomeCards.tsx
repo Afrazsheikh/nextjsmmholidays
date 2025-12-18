@@ -1,29 +1,44 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import "./home.css";
 
+interface Settings {
+  siteName: string;
+  heroText: string;
+  heroSubText: string;
+  logoUrl: string;
+  backgroundImageUrl: string;
+}
+
 export default function WelcomeCard() {
+  const [settings, setSettings] = useState<Settings>({
+    siteName: "MMholidays",
+    heroText: "Discover unforgettable journeys...",
+    heroSubText: "",
+    logoUrl: "",
+    backgroundImageUrl: "",
+  });
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => setSettings(data));
+  }, []);
+
   return (
-    <section className="hero">
+    <section
+      className="hero"
+      style={{
+        backgroundImage: `url(${settings.backgroundImageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="hero-content">
-        <h1>
-          Welcome to <span>MMholidays</span>
-        </h1>
-
-        <p>
-          Discover unforgettable journeys, handpicked holiday packages, and
-          personalized travel experiences across the world.
-        </p>
-
-        {/* Optional buttons */}
-        {/*
-        <div className="hero-buttons">
-          <a href="#packages" className="btn-primary">
-            Explore Packages
-          </a>
-          <a href="#contact" className="btn-outline">
-            Contact Us
-          </a>
-        </div>
-        */}
+        {settings.logoUrl && <img src={settings.logoUrl} alt="Logo" style={{ maxHeight: 60 }} />}
+        <h1>Welcome to <span>{settings.siteName}</span></h1>
+        <p>{settings.heroText}</p>
       </div>
     </section>
   );

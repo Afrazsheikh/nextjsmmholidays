@@ -21,18 +21,56 @@ type Package = {
   imageUrl: string;
 };
 
+
 export default function PackageList() {
   const [allPackages, setAllPackages] = useState<Package[]>([]);
-  const [selected, setSelected] = useState<Package[]>([]);
+    const [selected, setSelected] = useState<Package[]>([]);
+const [packages, setPackages] = useState<Package[]>([]);
+  const [openModal, setOpenModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+    
+     /* ---------- Load Packages ---------- */
+const loadPackages = async () => {
+  try {
+    setLoading(true);
+    setError("");
 
-  useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/afrazsheikh/mmholidays/main/packages.json"
-    )
-      .then((res) => res.json())
-      .then((data) => setAllPackages(data.packages))
-      .catch((err) => console.error("Error fetching packages:", err));
-  }, []);
+    const res = await fetch("/api/packages");
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch packages");
+    }
+
+    const data = await res.json();
+console.log(data);
+
+    // ✅ FIX HERE
+    //   setPackages(data);
+      setAllPackages(data)
+  } catch (err: unknown) {
+    setError(err instanceof Error ? err.message : "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
+
+    
+
+useEffect(() => {
+  loadPackages();
+}, []);
+
+
+//   useEffect(() => {
+//     fetch(
+//       "https://raw.githubusercontent.com/afrazsheikh/mmholidays/main/packages.json"
+//     )
+//       .then((res) => res.json())
+//       .then((data) => setAllPackages(data.packages))
+//       .catch((err) => console.error("Error fetching packages:", err));
+//   }, []);
 
   const toggleSelect = (pkg: Package) => {
     setSelected((prev) =>

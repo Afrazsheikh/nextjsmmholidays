@@ -8,6 +8,7 @@ const PackageSchema = new mongoose.Schema(
     duration: { type: String, required: true },
     imageUrl: { type: String, required: false },
     desc: { type: String, required: false },
+    rating: { type: String, required: false },
   },
   { timestamps: true }
 );

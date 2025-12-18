@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import AdminModal from "../admin/AdminModel";
 import DeleteModal from "../admin/DeleteModel";
+import AdminSettingsModal from "../admin/AdminSettingsModal"; // import settings modal
 import PackageTable from "./PackageTable";
 import "./admin.css";
 
-/* ---------- Types ---------- */
 export interface Package {
   _id?: string;
   name: string;
@@ -20,50 +20,56 @@ export interface Package {
   sale: string;
 }
 
-
-/* ---------- Component ---------- */
 export default function AdminPage() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [selected, setSelected] = useState<Package | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [settingsModal, setSettingsModal] = useState(false); // for website settings
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   /* ---------- Load Packages ---------- */
-const loadPackages = async () => {
-  try {
-    setLoading(true);
-    setError("");
+  const loadPackages = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-    const res = await fetch("/api/packages");
+      const res = await fetch("/api/packages");
+      if (!res.ok) throw new Error("Failed to fetch packages");
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch packages");
+      const data = await res.json();
+      setPackages(data);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    const data = await res.json();
-console.log(data);
-
-    // ✅ FIX HERE
-    setPackages(data);
-  } catch (err: unknown) {
-    setError(err instanceof Error ? err.message : "Something went wrong");
-  } finally {
-    setLoading(false);
-  }
-};
-
-    
-
-useEffect(() => {
-  loadPackages();
-}, []);
-
+  };
 
   useEffect(() => {
     loadPackages();
   }, []);
+
+  /* ---------- Handlers ---------- */
+  const handleAdd = () => {
+    setSelected(null);
+    setOpenModal(true);
+  };
+
+  const handleEdit = (pkg: Package) => {
+    setSelected(pkg);
+    setOpenModal(true);
+  };
+
+  const handleDelete = (pkg: Package) => {
+    setSelected(pkg);
+    setDeleteModal(true);
+  };
+
+  const handleOpenSettings = () => {
+    setSettingsModal(true);
+  };
 
   /* ---------- UI ---------- */
   return (
@@ -72,15 +78,14 @@ useEffect(() => {
       <div className="admin-header">
         <h1 className="admin-title">Admin Packages</h1>
 
-        <button
-          className="admin-add-btn"
-          onClick={() => {
-            setSelected(null);
-            setOpenModal(true);
-          }}
-        >
-          ➕ Add Package
-        </button>
+        <div style={{ display: "flex", gap: "12px" }}>
+          <button className="admin-add-btn" onClick={handleAdd}>
+            ➕ Add Package
+          </button>
+          <button className="admin-add-btn" onClick={handleOpenSettings}>
+            ⚙️ Website Settings
+          </button>
+        </div>
       </div>
 
       {/* States */}
@@ -91,29 +96,20 @@ useEffect(() => {
       {!loading && packages.length > 0 && (
         <PackageTable
           data={packages}
-          onEdit={(pkg) => {
-            setSelected(pkg);
-            setOpenModal(true);
-          }}
-          onDelete={(pkg) => {
-            setSelected(pkg);
-            setDeleteModal(true);
-          }}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
         />
       )}
+      {!loading && packages.length === 0 && <p>No packages found.</p>}
 
-      {!loading && packages.length === 0 && (
-        <p>No packages found.</p>
-      )}
-
-      {/* ---------- Modals ---------- */}
+      {/* Modals */}
       {openModal && (
         <AdminModal
           data={selected}
           onClose={() => setOpenModal(false)}
           onSaved={() => {
             setOpenModal(false);
-            loadPackages();
+            loadPackages(); // refresh table after save
           }}
         />
       )}
@@ -124,8 +120,15 @@ useEffect(() => {
           onClose={() => setDeleteModal(false)}
           onDeleted={() => {
             setDeleteModal(false);
-            loadPackages();
+            loadPackages(); // refresh table after delete
           }}
+        />
+      )}
+
+      {settingsModal && (
+        <AdminSettingsModal
+          onClose={() => setSettingsModal(false)}
+          onSaved={() => setSettingsModal(false)} // optional: reload page settings if needed
         />
       )}
     </div>

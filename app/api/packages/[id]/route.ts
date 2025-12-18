@@ -32,13 +32,19 @@ export async function GET(req: Request, { params }: Params) {
 }
 
 /* ===================== UPDATE PACKAGE ===================== */
-export async function PUT(req: Request, { params }: Params) {
+
+export async function PUT(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     await connectDB();
+
+    const { id } = await params; // 👈 await the params to get the id
     const body = await req.json();
 
-    const updated = await Package.findByIdAndUpdate(params.id, body, {
-      new: true,
+    const updated = await Package.findByIdAndUpdate(id, body, {
+      new: true, // return the updated document
     });
 
     if (!updated) {
@@ -57,14 +63,16 @@ export async function PUT(req: Request, { params }: Params) {
 /* ===================== DELETE PACKAGE ===================== */
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  console.log("DELETE route hit, id:", params.id);
+  const { id } = await params; // 👈 THIS IS THE FIX
+
+  console.log("DELETE route hit, id:", id);
 
   try {
     await connectDB();
 
-    const deleted = await Package.findByIdAndDelete(params.id);
+    const deleted = await Package.findByIdAndDelete(id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Package not found" }, { status: 404 });
