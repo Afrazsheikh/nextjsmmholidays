@@ -34,7 +34,9 @@ export default function AdminPage() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [settingsModal, setSettingsModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+    const [error, setError] = useState("");
+    const [loginSuccess, setLoginSuccess] = useState(false);
+
 
   /** ---------- LOGIN HANDLER ---------- */
   const handleLogin = (e: React.FormEvent) => {
@@ -43,7 +45,8 @@ export default function AdminPage() {
       setLoggedIn(true);
       setUsername("");
       setPassword("");
-      setAuthError("");
+        setAuthError("");
+         setLoginSuccess(true)
       localStorage.setItem("adminLoggedIn", "true"); // persist login
     } else {
       setAuthError("Invalid username or password");
@@ -102,55 +105,60 @@ export default function AdminPage() {
   /** ---------- RENDER ---------- */
   if (!loggedIn) {
     // LOGIN FORM
-    return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <form
-          onSubmit={handleLogin}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "12px",
-            padding: "24px",
-            border: "1px solid #ccc",
-            borderRadius: "8px",
-            width: "300px",
-          }}
-        >
-          <h2 style={{ textAlign: "center" }}>Admin Login</h2>
+  return (
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh",
+    }}
+  >
+    <form
+      onSubmit={handleLogin}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "12px",
+        padding: "24px",
+        border: "1px solid #ccc",
+        borderRadius: "8px",
+        width: "300px",
+      }}
+    >
+      <h2 style={{ textAlign: "center" }}>Admin Login</h2>
 
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-            style={{ padding: "8px" }}
-          />
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+        style={{ padding: "8px" }}
+      />
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ padding: "8px" }}
-          />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        style={{ padding: "8px" }}
+      />
 
-          {authError && <p style={{ color: "red" }}>{authError}</p>}
+      {/* ERROR MESSAGE */}
+      {authError && <p style={{ color: "red", textAlign: "center" }}>{authError}</p>}
 
-          <button type="submit" style={{ padding: "8px", cursor: "pointer" }}>
-            Login
-          </button>
-        </form>
-      </div>
-    );
+      {/* SUCCESS MESSAGE */}
+      {loginSuccess && <p style={{ color: "green", textAlign: "center" }}>Login successful!</p>}
+
+      <button type="submit" style={{ padding: "8px", cursor: "pointer" }}>
+        Login
+      </button>
+    </form>
+  </div>
+);
+
   }
 
   // ADMIN PAGE

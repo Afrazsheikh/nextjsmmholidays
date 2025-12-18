@@ -3,12 +3,14 @@ import { connectDB } from "../../../mongodb";
 import Package from "../../../models/Package";
 import mongoose from "mongoose";
 
-interface Params {
-  params: { id: string };
+interface RouteParams {
+  params: {
+    id: string;
+  };
 }
 
 /* ===================== GET SINGLE PACKAGE ===================== */
-export async function GET(req: Request, { params }: Params) {
+export async function GET(req: Request, { params }: RouteParams) {
   try {
     await connectDB();
 
@@ -32,19 +34,14 @@ export async function GET(req: Request, { params }: Params) {
 }
 
 /* ===================== UPDATE PACKAGE ===================== */
-
-export async function PUT(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: Request, { params }: RouteParams) {
   try {
     await connectDB();
 
-    const { id } = await params; // 👈 await the params to get the id
     const body = await req.json();
 
-    const updated = await Package.findByIdAndUpdate(id, body, {
-      new: true, // return the updated document
+    const updated = await Package.findByIdAndUpdate(params.id, body, {
+      new: true,
     });
 
     if (!updated) {
@@ -61,18 +58,11 @@ export async function PUT(
 }
 
 /* ===================== DELETE PACKAGE ===================== */
-export async function DELETE(
-  req: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params; // 👈 THIS IS THE FIX
-
-  console.log("DELETE route hit, id:", id);
-
+export async function DELETE(req: Request, { params }: RouteParams) {
   try {
     await connectDB();
 
-    const deleted = await Package.findByIdAndDelete(id);
+    const deleted = await Package.findByIdAndDelete(params.id);
 
     if (!deleted) {
       return NextResponse.json({ error: "Package not found" }, { status: 404 });
