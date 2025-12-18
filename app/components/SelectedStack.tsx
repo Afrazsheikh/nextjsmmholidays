@@ -1,16 +1,30 @@
 "use client";
 import "../style/packages.css";
 import "./home.css";
+
 type Package = {
-  id: string;
+  _id: string;
   name: string;
   offerPrice: number;
 };
 
-export default function SelectedStack({ selected }: { selected: Package[] }) {
+interface Props {
+  selected: Package[];
+  onRemove: (_id: string) => void;
+}
+
+export default function SelectedStack({ selected, onRemove }: Props) {
+  const baseUrl =
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "https://mmholidays.com";
+
   const shareText = selected
-    .map((p) => `• ${p.name} - INR ${p.offerPrice}`)
-    .join("\n");
+    .map(
+      (p) =>
+        `• ${p.name}\nPrice: THB ${p.offerPrice}\n👉 ${baseUrl}/package/${p._id}`
+    )
+    .join("\n\n");
 
   const shareUrl = `https://wa.me/?text=${encodeURIComponent(
     `Hi, I am interested in these packages:\n\n${shareText}`
@@ -18,13 +32,31 @@ export default function SelectedStack({ selected }: { selected: Package[] }) {
 
   return (
     <div className="selected-stack">
+      {/* LEFT */}
       <div className="stack-left">
         <span className="stack-count">{selected.length}</span>
         <span className="stack-text">
-          Package{selected.length > 1 ? "s" : ""} Added
+          Package{selected.length > 1 ? "s" : ""} Selected
         </span>
       </div>
 
+      {/* SELECTED LIST */}
+      <div className="stack-list">
+        {selected.map((pkg) => (
+          <div key={pkg._id} className="stack-item">
+            <span className="stack-name">{pkg.name}</span>
+            <button
+              className="stack-remove"
+              onClick={() => onRemove(pkg._id)}
+              aria-label="Remove package"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* SHARE */}
       <button
         className="whatsapp-share-btn"
         onClick={() => window.open(shareUrl, "_blank")}

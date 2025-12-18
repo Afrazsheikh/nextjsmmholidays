@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import AdminModal from "../admin/AdminModel";
 import DeleteModal from "../admin/DeleteModel";
-import AdminSettingsModal from "../admin/AdminSettingsModal"; // import settings modal
+import AdminSettingsModal from "../admin/AdminSettingsModal";
 import PackageTable from "./PackageTable";
 import "./admin.css";
 
@@ -21,23 +21,48 @@ export interface Package {
 }
 
 export default function AdminPage() {
+  /** ----------- AUTH STATE ----------- */
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+
+  /** ----------- ADMIN PAGE STATE ----------- */
   const [packages, setPackages] = useState<Package[]>([]);
   const [selected, setSelected] = useState<Package | null>(null);
   const [openModal, setOpenModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [settingsModal, setSettingsModal] = useState(false); // for website settings
+  const [settingsModal, setSettingsModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /* ---------- Load Packages ---------- */
+  /** ---------- LOGIN HANDLER ---------- */
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (username === "mmholidayadmin" && password === "mmadmin123") {
+      setLoggedIn(true);
+      setUsername("");
+      setPassword("");
+      setAuthError("");
+      localStorage.setItem("adminLoggedIn", "true"); // persist login
+    } else {
+      setAuthError("Invalid username or password");
+    }
+  };
+
+  /** ---------- LOGOUT HANDLER ---------- */
+  const handleLogout = () => {
+    setLoggedIn(false);
+    localStorage.removeItem("adminLoggedIn");
+  };
+
+  /** ---------- Load Packages ---------- */
   const loadPackages = async () => {
     try {
       setLoading(true);
       setError("");
-
       const res = await fetch("/api/packages");
       if (!res.ok) throw new Error("Failed to fetch packages");
-
       const data = await res.json();
       setPackages(data);
     } catch (err: unknown) {
@@ -48,10 +73,13 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
-    loadPackages();
-  }, []);
+    const stored = localStorage.getItem("adminLoggedIn");
+    if (stored === "true") setLoggedIn(true);
 
-  /* ---------- Handlers ---------- */
+    if (loggedIn) loadPackages();
+  }, [loggedIn]);
+
+  /** ---------- Handlers ---------- */
   const handleAdd = () => {
     setSelected(null);
     setOpenModal(true);
@@ -71,19 +99,75 @@ export default function AdminPage() {
     setSettingsModal(true);
   };
 
-  /* ---------- UI ---------- */
+  /** ---------- RENDER ---------- */
+  if (!loggedIn) {
+    // LOGIN FORM
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <form
+          onSubmit={handleLogin}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            padding: "24px",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            width: "300px",
+          }}
+        >
+          <h2 style={{ textAlign: "center" }}>Admin Login</h2>
+
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+            style={{ padding: "8px" }}
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            style={{ padding: "8px" }}
+          />
+
+          {authError && <p style={{ color: "red" }}>{authError}</p>}
+
+          <button type="submit" style={{ padding: "8px", cursor: "pointer" }}>
+            Login
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // ADMIN PAGE
   return (
     <div className="admin-container">
       {/* Header */}
       <div className="admin-header">
         <h1 className="admin-title">Admin Packages</h1>
-
         <div style={{ display: "flex", gap: "12px" }}>
           <button className="admin-add-btn" onClick={handleAdd}>
             ➕ Add Package
           </button>
           <button className="admin-add-btn" onClick={handleOpenSettings}>
             ⚙️ Website Settings
+          </button>
+          <button className="admin-add-btn" onClick={handleLogout}>
+            🔒 Logout
           </button>
         </div>
       </div>
@@ -109,7 +193,7 @@ export default function AdminPage() {
           onClose={() => setOpenModal(false)}
           onSaved={() => {
             setOpenModal(false);
-            loadPackages(); // refresh table after save
+            loadPackages();
           }}
         />
       )}
@@ -120,7 +204,7 @@ export default function AdminPage() {
           onClose={() => setDeleteModal(false)}
           onDeleted={() => {
             setDeleteModal(false);
-            loadPackages(); // refresh table after delete
+            loadPackages();
           }}
         />
       )}
@@ -128,7 +212,7 @@ export default function AdminPage() {
       {settingsModal && (
         <AdminSettingsModal
           onClose={() => setSettingsModal(false)}
-          onSaved={() => setSettingsModal(false)} // optional: reload page settings if needed
+          onSaved={() => setSettingsModal(false)}
         />
       )}
     </div>

@@ -7,7 +7,7 @@ import WelcomeCard from "./WelcomeCards";
 import "../style/packages.css";
 
 type Package = {
-  id: string;
+  _id: string;
   name: string;
   desc?: string;
   price: number;
@@ -74,8 +74,8 @@ useEffect(() => {
 
   const toggleSelect = (pkg: Package) => {
     setSelected((prev) =>
-      prev.some((p) => p.id === pkg.id)
-        ? prev.filter((p) => p.id !== pkg.id)
+      prev.some((p) => p._id === pkg._id)
+        ? prev.filter((p) => p._id !== pkg._id)
         : [...prev, pkg]
     );
   };
@@ -87,16 +87,24 @@ useEffect(() => {
       <div className="packages-grid">
         {allPackages.map((pkg) => (
           <PackageCard
-            key={pkg.id}
+            key={pkg._id}
             pkg={pkg}
-            isSelected={selected.some((p) => p.id === pkg.id)}
+            isSelected={selected.some((p) => p._id === pkg._id)}
             onToggleSelect={() => toggleSelect(pkg)}
           />
         ))}
       </div>
 
       {/* 🔥 SHOW SELECTED STACK */}
-      {selected.length > 0 && <SelectedStack selected={selected} />}
+     {selected.length > 0 && (
+  <SelectedStack
+    selected={selected}
+    onRemove={(id) =>
+      setSelected((prev) => prev.filter((p) => p._id !== id))
+    }
+  />
+)}
+
     </section>
   );
 }

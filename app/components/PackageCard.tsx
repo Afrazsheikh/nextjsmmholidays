@@ -4,7 +4,7 @@ import { useState } from "react";
 import "../style/packages.css";
  
 type Package = {
-  id: string;
+  _id: string;
   name: string;
   desc?: string;
   price: number;
@@ -30,7 +30,7 @@ export default function PackageCard({ pkg, isSelected, onToggleSelect,wordLimit 
 console.log(pkg);
 
   const handleToggle = () => {
-    onToggleSelect(pkg.id);
+    onToggleSelect(pkg._id);
   };
   // Truncate safely to 10 words or ~100 chars
       
@@ -109,19 +109,20 @@ console.log(pkg);
 </button>
 
 {isSelected && (
-  <button
-    className="share-btn"
-    onClick={() =>
-      window.open(
-        `https://wa.me/?text=${encodeURIComponent(
-          `Hi, I am interested in ${pkg.name}\nPrice: THB ${pkg.offerPrice}`
-        )}`,
-        "_blank"
-      )
-    }
-  >
-    Share
-  </button>
+<button
+  className="share-btn"
+  onClick={() =>
+    window.open(
+      `https://wa.me/?text=${encodeURIComponent(
+        `Hi, I am interested in this package:\n\n${pkg.name}\nPrice: THB ${pkg.offerPrice}\n\nView details:\n${window.location.origin}/packages/${pkg._id}`
+      )}`,
+      "_blank"
+    )
+  }
+>
+  Share
+</button>
+
 )}
 
 

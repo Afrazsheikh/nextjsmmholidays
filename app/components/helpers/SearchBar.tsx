@@ -1,28 +1,32 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
+import Paper from "@mui/material/Paper";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
 
 interface Package {
   id: string;
   name: string;
-  desc: string;
-  location?: string;
-  price?: number;
   offerPrice?: number;
 }
 
 interface SearchBarProps {
-  onSelect: (pkg: Package) => void;
   placeholder?: string;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({
-  onSelect,
-  placeholder = "Search packages...",
-}) => {
+const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search packages..." }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Package[]>([]);
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     if (!query.trim()) {
@@ -34,53 +38,66 @@ const SearchBar: React.FC<SearchBarProps> = ({
       try {
         setLoading(true);
         const res = await fetch(`/api/search?q=${query}`);
-        if (!res.ok) throw new Error("Search failed");
-
         const data = await res.json();
         setResults(data);
       } catch (err) {
-        console.error("Search error:", err);
+        console.error(err);
         setResults([]);
       } finally {
         setLoading(false);
       }
-    }, 300); // debounce
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [query]);
 
   const handleSelect = (pkg: Package) => {
-    onSelect(pkg);
     setQuery("");
-    setShowDropdown(false);
+    setShow(false);
+    router.push(`/packages/${pkg.id}`);
   };
 
   return (
-    <div className="search-container" style={{ position: "relative" }}>
-      <div className="search-bar">
-        <input
-          type="text"
-          value={query}
-          placeholder={placeholder}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => setShowDropdown(true)}
-          onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
-        />
+    <div style={{ position: "relative", width: "300px" }}>
+      <TextField
+        fullWidth
+        value={query}
+        placeholder={placeholder}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => setShow(true)}
+        onBlur={() => setTimeout(() => setShow(false), 200)}
+        InputProps={{
+          endAdornment: loading ? <CircularProgress size={20} /> : null,
+        }}
+      />
 
-        <span className="search-icon">🔍</span>
-
-        {loading && <div className="search-loading">Searching...</div>}
-
-        {showDropdown && results.length > 0 && (
-          <ul className="search-results">
+      {show && results.length > 0 && (
+        <Paper
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            zIndex: 1000,
+            maxHeight: "250px",
+            overflowY: "auto",
+            marginTop: 4,
+          }}
+        >
+          <List dense>
             {results.map((pkg) => (
-              <li key={pkg.id} onClick={() => handleSelect(pkg)}>
-                {pkg.name}
-              </li>
+              <ListItem key={pkg.id} disablePadding>
+                <ListItemButton onMouseDown={() => handleSelect(pkg)}>
+                  <ListItemText
+                    primary={pkg.name}
+                    secondary={pkg.offerPrice ? `₹${pkg.offerPrice}` : ""}
+                  />
+                </ListItemButton>
+              </ListItem>
             ))}
-          </ul>
-        )}
-      </div>
+          </List>
+        </Paper>
+      )}
     </div>
   );
 };
