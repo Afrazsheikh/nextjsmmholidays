@@ -11,7 +11,7 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
-import { Package } from "./page";
+import { Package } from "./AdminClient";
 import dynamic from "next/dynamic";
 
 

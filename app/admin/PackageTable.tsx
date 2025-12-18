@@ -10,7 +10,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { Package } from "./page";
+import { Package } from "./AdminClient";
 
 import "./admin.css";
 
