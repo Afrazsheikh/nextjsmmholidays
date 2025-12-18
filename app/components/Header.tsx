@@ -20,7 +20,7 @@ const Header = () => {
         <>
           <div className="header-center">
             <SearchBar
-              onSelect={(pkg) => router.push(`/package/${pkg.id}`)}
+              onSelect={(pkg:any) => router.push(`/package/${pkg.id}`)}
             />
           </div>
 

@@ -17,10 +17,11 @@ interface Package {
 }
 
 interface SearchBarProps {
-  placeholder?: string;
+    placeholder?: string;
+    onSelect?: any
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search packages..." }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ placeholder = "Search packages..." },) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Package[]>([]);
   const [show, setShow] = useState(false);

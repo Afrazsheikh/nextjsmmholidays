@@ -28,6 +28,7 @@ type Props = {
 export default function PackageCard({ pkg, isSelected, onToggleSelect,wordLimit = 10 }: Props) {
   const [expanded, setExpanded] = useState(false);
 console.log(pkg);
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 
   const handleToggle = () => {
     onToggleSelect(pkg._id);
@@ -111,14 +112,15 @@ console.log(pkg);
 {isSelected && (
 <button
   className="share-btn"
-  onClick={() =>
-    window.open(
-      `https://wa.me/?text=${encodeURIComponent(
-        `Hi, I am interested in this package:\n\n${pkg.name}\nPrice: THB ${pkg.offerPrice}\n\nView details:\n${window.location.origin}/packages/${pkg._id}`
-      )}`,
-      "_blank"
-    )
-  }
+  onClick={() => {
+    if (typeof window === "undefined") return;
+
+    const url = `https://wa.me/?text=${encodeURIComponent(
+      `Hi, I am interested in this package:\n\n${pkg.name}\nPrice: THB ${pkg.offerPrice}\n\nView details:\n${SITE_URL}/packages/${pkg._id}`
+    )}`;
+
+    window.open(url, "_blank");
+  }}
 >
   Share
 </button>
@@ -126,19 +128,20 @@ console.log(pkg);
 )}
 
 
-            <button
-              className="callback-btn"
-              onClick={() =>
-                window.open(
-                  `https://wa.me/+91821996489?text=${encodeURIComponent(
-                    "Hi, I want a callback for " + pkg.name
-                  )}`,
-                  "_blank"
-                )
-              }
-            >
-              Request Callback
-            </button>
+         <button
+  className="callback-btn"
+  onClick={() => {
+    if (typeof window === "undefined") return;
+
+    const url = `https://wa.me/91821996489?text=${encodeURIComponent(
+      `Hi, I want a callback for ${pkg.name}`
+    )}`;
+
+    window.open(url, "_blank");
+  }}
+>
+  Request Callback
+</button>
           </div>
 
           {/* DESCRIPTION */}

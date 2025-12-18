@@ -14,9 +14,10 @@ interface Props {
 }
 
 export default function SelectedStack({ selected, onRemove }: Props) {
+    const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
   const baseUrl =
     typeof window !== "undefined"
-      ? window.location.origin
+      ? SITE_URL
       : "https://mmholidays.com";
 
   const shareText = selected
@@ -57,12 +58,15 @@ export default function SelectedStack({ selected, onRemove }: Props) {
       </div>
 
       {/* SHARE */}
-      <button
-        className="whatsapp-share-btn"
-        onClick={() => window.open(shareUrl, "_blank")}
-      >
-        Share on WhatsApp
-      </button>
+ <button
+  className="whatsapp-share-btn"
+  onClick={() => {
+    if (typeof window === "undefined") return;
+    window.open(shareUrl, "_blank");
+  }}
+>
+  Share on WhatsApp
+</button>
     </div>
   );
 }
