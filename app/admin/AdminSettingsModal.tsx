@@ -122,7 +122,7 @@ export default function AdminSettingsModal({ onClose, onSaved }: Props) {
         />
 
         {/* 🔹 Logo Upload */}
-        <div>
+        {/* <div>
           <label><b>Logo</b></label>
           <input
             type="file"
@@ -136,11 +136,11 @@ export default function AdminSettingsModal({ onClose, onSaved }: Props) {
               style={{ marginTop: 8, height: 60 }}
             />
           )}
-        </div>
+        </div> */}
 
         {/* 🔹 Background Image Upload */}
         <div>
-          <label><b>Background Image</b></label>
+          <label><b>Section Background Image</b></label>
           <input
             type="file"
             accept="image/*"

@@ -9,6 +9,8 @@ const PackageSchema = new mongoose.Schema(
     imageUrl: { type: String, required: false },
     desc: { type: String, required: false },
     rating: { type: String, required: false },
+    location: { type: String, required: false },
+    sale: { type: String, required: false },
   },
   { timestamps: true }
 );

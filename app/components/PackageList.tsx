@@ -29,26 +29,51 @@ const [packages, setPackages] = useState<Package[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+    const [error, setError] = useState("");
+const [page, setPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
     
      /* ---------- Load Packages ---------- */
-const loadPackages = async () => {
+// const loadPackages = async () => {
+//   try {
+//     setLoading(true);
+//     setError("");
+
+//     const res = await fetch("/api/packages");
+
+//     if (!res.ok) {
+//       throw new Error("Failed to fetch packages");
+//     }
+
+//     const data = await res.json();
+// console.log(data);
+
+//     // ✅ FIX HERE
+//     //   setPackages(data);
+//       setAllPackages(data)
+//   } catch (err: unknown) {
+//     setError(err instanceof Error ? err.message : "Something went wrong");
+//   } finally {
+//     setLoading(false);
+//   }
+// };
+const loadPackages = async (pageNumber = 1) => {
   try {
     setLoading(true);
     setError("");
 
-    const res = await fetch("/api/packages");
+    const res = await fetch(`/api/packages?page=${pageNumber}&limit=6`);
 
-    if (!res.ok) {
-      throw new Error("Failed to fetch packages");
-    }
+    if (!res.ok) throw new Error("Failed to fetch packages");
 
-    const data = await res.json();
-console.log(data);
+    const data = await res.json(); // ✅ THIS IS THE DATA
 
-    // ✅ FIX HERE
-    //   setPackages(data);
-      setAllPackages(data)
+    console.log("📦 API DATA:", data);
+
+      setPackages(data.packages);
+      setAllPackages(data.packages);
+    setTotalPages(data.pagination.totalPages);
+    setPage(data.pagination.page);
   } catch (err: unknown) {
     setError(err instanceof Error ? err.message : "Something went wrong");
   } finally {
@@ -56,11 +81,11 @@ console.log(data);
   }
 };
 
-    
 
 useEffect(() => {
-  loadPackages();
-}, []);
+  loadPackages(page);
+}, [page]);
+
 
 
 //   useEffect(() => {
@@ -93,7 +118,28 @@ useEffect(() => {
             onToggleSelect={() => toggleSelect(pkg)}
           />
         ))}
-      </div>
+          </div>
+          
+          {/* ✅ PAGINATION CONTROLS (HERE) */}
+  <div className="pagination">
+    <button
+      disabled={page === 1}
+      onClick={() => setPage((p) => p - 1)}
+    >
+      ← Previous
+    </button>
+
+    <span>
+      Page {page} of {totalPages}
+    </span>
+
+    <button
+      disabled={page === totalPages}
+      onClick={() => setPage((p) => p + 1)}
+    >
+      Next →
+    </button>
+  </div>
 
       {/* 🔥 SHOW SELECTED STACK */}
      {selected.length > 0 && (

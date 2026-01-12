@@ -38,7 +38,8 @@ const emptyPackage: Package = {
   desc: "",
   rating: 0,
   reviews: 0,
-  sale: "",
+    sale: "",
+  location: ""
 };
 
 export default function AdminModal({ data, onClose, onSaved }: Props) {
@@ -305,6 +306,16 @@ const isFormValid = (): boolean => {
                 label="Sale"
                 value={form.sale}
                 onChange={(e) => updateField("sale", e.target.value)}
+                fullWidth
+                InputProps={{ style: { backgroundColor: "#f5f5f5" } }}
+              />
+                      </div>
+                         {/* location */}
+            <div style={{ flex: "1 1 30%" }}>
+              <TextField
+                label="location"
+                value={form.location}
+                onChange={(e) => updateField("location", e.target.value)}
                 fullWidth
                 InputProps={{ style: { backgroundColor: "#f5f5f5" } }}
               />

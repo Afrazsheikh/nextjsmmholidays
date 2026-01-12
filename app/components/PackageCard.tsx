@@ -82,8 +82,10 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
         <div className="card-body">
           <p className="duration">{pkg.duration}</p>
           <div className="rating-row">
-            <span className="rating">⭐ {pkg.rating}</span>
-            <span className="rating-count">({pkg.ratingCount})</span>
+        {pkg.rating && (
+  <span className="rating">⭐ {pkg.rating}</span>
+)}
+            {/* <span className="rating-count">({pkg.ratingCount})</span> */}
           </div>
           <h3 className="pkg-title">{pkg.name}</h3>
           <div className="location-row">
@@ -127,21 +129,43 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL!;
 
 )}
 
-
-         <button
+<button
   className="callback-btn"
-  onClick={() => {
-    if (typeof window === "undefined") return;
+ onClick={() => {
+  if (typeof window === "undefined") return;
 
-    const url = `https://wa.me/91821996489?text=${encodeURIComponent(
-      `Hi, I want a callback for ${pkg.name}`
-    )}`;
+  // Track callback
+  fetch("/api/analytics", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      packageId: pkg._id,
+      type: "callback",
+    }),
+  });
 
-    window.open(url, "_blank");
-  }}
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER!;
+  const pageUrl = SITE_URL;
+
+  const message = `Hi, I want a callback.
+
+📦 Package: ${pkg.name}
+💰 Price: THB ${pkg.offerPrice}
+
+🔗 ${pageUrl}`;
+
+  window.open(
+    `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+    "_blank"
+  );
+}}
+
 >
   Request Callback
 </button>
+
+
+
           </div>
 
           {/* DESCRIPTION */}

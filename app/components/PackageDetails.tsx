@@ -39,6 +39,19 @@ console.log(data);
 useEffect(() => {
   loadPackages();
 }, []);
+useEffect(() => {
+  if (!selectedPackage?._id) return;
+
+  fetch("/api/analytics", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      packageId: selectedPackage._id,
+      type: "view",
+    }),
+  });
+}, [selectedPackage?._id]);
+
 
   useEffect(() => {
     const loadData = async () => {

@@ -35,11 +35,17 @@ export default function WelcomeCard() {
         backgroundPosition: "center",
       }}
     >
-      <div className="hero-content">
-        {settings.logoUrl && <img src={settings.logoUrl} alt="Logo" style={{ maxHeight: 60 }} />}
-        <h1>Welcome to <span>{settings.siteName}</span></h1>
+          <div className="hero-content">
+              <div   className="hero"
+      style={{
+        backgroundImage: `url(${settings.backgroundImageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }} ></div>
         <p>{settings.heroText}</p>
-      </div>
+          </div>
+          
+          
     </section>
   );
 }

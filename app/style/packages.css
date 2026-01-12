@@ -1,6 +1,8 @@
 /* General Reset and Typography */
 body {
-  background-image: url("https://res.cloudinary.com/duzsdbnp9/image/upload/v1765956760/cld-sample-2.jpg");
+  /* background-image: url("https://res.cloudinary.com/duzsdbnp9/image/upload/v1765956760/cld-sample-2.jpg"); */
+  background-image: url("https://res.cloudinary.com/duzsdbnp9/image/upload/v1768206086/bg_2_tzolep.png");
+
   background-size: cover; /* Makes the image cover full screen */
   background-position: center; /* Centers the image */
   background-repeat: no-repeat; /* Avoids repeat tiles */

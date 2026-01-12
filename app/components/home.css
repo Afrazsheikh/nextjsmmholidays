@@ -6,14 +6,16 @@
 
 .hero {
   min-height: 50vh;
-  /* width: 100%; */
-  /* background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url("/images/bg_image.png") center / cover no-repeat; */
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 24px;
+
+  /* fallback background in case inline fails */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .hero-content {
@@ -39,7 +41,7 @@
   font-size: clamp(15px, 2.8vw, 18px);
   margin-bottom: 28px;
   line-height: 1.6;
-  color: #000000;
+  color: #ffd900;
 }
 
 .hero-buttons {
@@ -346,4 +348,31 @@
   .stack-name {
     max-width: 90px;
   }
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 30px 0;
+}
+
+.pagination button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.pagination button:disabled {
+  background: #c7d2fe;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 14px;
+  color: #374151;
 }

@@ -7,6 +7,12 @@ import DeleteModal from "../admin/DeleteModel";
 import AdminSettingsModal from "../admin/AdminSettingsModal";
 import PackageTable from "./PackageTable";
 import "./admin.css";
+import Analytics from "../admin/analytics/page"
+import AnalyticsTrendChart from "../admin/analytics/trend/AnalyticsTrendChart"
+
+
+
+import { Margin } from "@mui/icons-material";
 // import dynamic from "next/dynamic";
 // // Disable SSR for the entire admin page
 // const AdminClient = dynamic(() => import("./AdminClient"), {
@@ -24,7 +30,8 @@ export interface Package {
   desc: string;
   rating: number;
   reviews: number;
-  sale: string;
+    sale: string;
+    location:string
 }
 
 export default function AdminPage() {
@@ -42,7 +49,9 @@ export default function AdminPage() {
   const [deleteModal, setDeleteModal] = useState(false);
   const [settingsModal, setSettingsModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+    const [error, setError] = useState("");
+    const [page, setPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
 
   /** ---------- LOGIN HANDLER ---------- */
   const handleLogin = (e: React.FormEvent) => {
@@ -71,20 +80,42 @@ export default function AdminPage() {
   };
 
   /** ---------- Load Packages ---------- */
-  const loadPackages = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const res = await fetch("/api/packages");
-      if (!res.ok) throw new Error("Failed to fetch packages");
-      const data = await res.json();
-      setPackages(data);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
+//   const loadPackages = async () => {
+//     try {
+//       setLoading(true);
+//       setError("");
+//       const res = await fetch("/api/packages");
+//       if (!res.ok) throw new Error("Failed to fetch packages");
+//       const data = await res.json();
+//       setPackages(data);
+//     } catch (err: unknown) {
+//       setError(err instanceof Error ? err.message : "Something went wrong");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+const loadPackages = async (pageNumber = 1) => {
+  try {
+    setLoading(true);
+    setError("");
+
+    const res = await fetch(`/api/packages?page=${pageNumber}&limit=6`);
+
+    if (!res.ok) throw new Error("Failed to fetch packages");
+
+    const data = await res.json(); // ✅ THIS IS THE DATA
+
+    console.log("📦 API DATA:", data);
+
+      setPackages(data.packages);
+    setTotalPages(data.pagination.totalPages);
+    setPage(data.pagination.page);
+  } catch (err: unknown) {
+    setError(err instanceof Error ? err.message : "Something went wrong");
+  } finally {
+    setLoading(false);
+  }
+};
 
   /** ---------- Check login on mount ---------- */
   useEffect(() => {
@@ -205,16 +236,33 @@ export default function AdminPage() {
 
       {/* States */}
       {loading && <p>Loading packages...</p>}
-      {error && <p className="text-red-500">{error}</p>}
+          {error && <p className="text-red-500">{error}</p>}
+      
 
       {/* Table */}
-      {!loading && packages.length > 0 && (
+          {!loading && packages.length > 0 && (
+              
+              
         <PackageTable
           data={packages}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
-      )}
+          )
+          }
+
+             {!loading && packages.length > 0 && (
+  <div style={{ marginTop: "20px" }}>
+    <AnalyticsTrendChart />
+  </div>
+)}
+       {!loading && packages.length > 0 && (
+  <div style={{ marginTop: "20px" }}>
+    <Analytics />
+  </div>
+)}
+
+         
       {!loading && packages.length === 0 && <p>No packages found.</p>}
 
       {/* Modals */}
