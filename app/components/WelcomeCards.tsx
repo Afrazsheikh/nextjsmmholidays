@@ -7,8 +7,6 @@ interface Settings {
   siteName: string;
   heroText: string;
   heroSubText: string;
-  logoUrl: string;
-  backgroundImageUrl: string;
 }
 
 export default function WelcomeCard() {
@@ -16,8 +14,6 @@ export default function WelcomeCard() {
     siteName: "MMholidays",
     heroText: "Discover unforgettable journeys...",
     heroSubText: "",
-    logoUrl: "",
-    backgroundImageUrl: "",
   });
 
   useEffect(() => {
@@ -27,25 +23,14 @@ export default function WelcomeCard() {
   }, []);
 
   return (
-    <section
-      className="hero"
-      style={{
-        backgroundImage: `url(${settings.backgroundImageUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-          <div className="hero-content">
-              <div   className="hero"
-      style={{
-        backgroundImage: `url(${settings.backgroundImageUrl})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }} ></div>
-        <p>{settings.heroText}</p>
-          </div>
-          
-          
+    <section className="welcome-card">
+      <div className="welcome-content">
+        <h1>{settings.heroText}</h1>
+
+        {settings.heroSubText && (
+          <p>{settings.heroSubText}</p>
+        )}
+      </div>
     </section>
   );
 }

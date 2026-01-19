@@ -5,6 +5,7 @@ import PackageCard from "./PackageCard";
 import SelectedStack from "./SelectedStack";
 import WelcomeCard from "./WelcomeCards";
 import "../style/packages.css";
+import LiveToursSection from "./LiveToursSection";
 
 type Package = {
   _id: string;
@@ -150,7 +151,7 @@ useEffect(() => {
     }
   />
 )}
-
+    <LiveToursSection />
     </section>
   );
 }

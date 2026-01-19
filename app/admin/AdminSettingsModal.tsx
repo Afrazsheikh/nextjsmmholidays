@@ -13,9 +13,13 @@ import {
 interface Settings {
   siteName: string;
   logoUrl: string;
-  backgroundImageUrl: string;
+    backgroundImageUrl: string;
   heroText: string;
-  heroSubText: string;
+    heroSubText: string;
+      // ✅ NEW
+  totalTravellers: number;
+  onGroundCount: number;
+  onGroundCountries: string;
 }
 
 interface Props {
@@ -29,7 +33,10 @@ export default function AdminSettingsModal({ onClose, onSaved }: Props) {
     logoUrl: "",
     backgroundImageUrl: "",
     heroText: "",
-    heroSubText: "",
+      heroSubText: "",
+        totalTravellers: 6899,
+  onGroundCount: 360,
+  onGroundCountries: "THAILAND & MALDIVES",
   });
 
   const [uploading, setUploading] = useState(false);
@@ -87,6 +94,7 @@ export default function AdminSettingsModal({ onClose, onSaved }: Props) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(settings),
     });
+console.log(res);
 
     if (res.ok) onSaved();
     else alert("Failed to save settings");
@@ -120,6 +128,34 @@ export default function AdminSettingsModal({ onClose, onSaved }: Props) {
           onChange={(e) => updateField("heroSubText", e.target.value)}
           fullWidth
         />
+<TextField
+  label="Total Travellers (e.g. 6899)"
+  type="number"
+  value={settings.totalTravellers}
+  onChange={(e) =>
+    updateField("totalTravellers", Number(e.target.value) as any)
+  }
+  fullWidth
+/>
+
+<TextField
+  label="On-ground Count (e.g. 360)"
+  type="number"
+  value={settings.onGroundCount}
+  onChange={(e) =>
+    updateField("onGroundCount", Number(e.target.value) as any)
+  }
+  fullWidth
+/>
+
+<TextField
+  label="On-ground Countries (e.g. THAILAND & MALDIVES)"
+  value={settings.onGroundCountries}
+  onChange={(e) =>
+    updateField("onGroundCountries", e.target.value)
+  }
+  fullWidth
+/>
 
         {/* 🔹 Logo Upload */}
         {/* <div>
@@ -140,7 +176,7 @@ export default function AdminSettingsModal({ onClose, onSaved }: Props) {
 
         {/* 🔹 Background Image Upload */}
         <div>
-          <label><b>Section Background Image</b></label>
+          <label><b>Main Background Image</b></label>
           <input
             type="file"
             accept="image/*"
@@ -160,6 +196,9 @@ export default function AdminSettingsModal({ onClose, onSaved }: Props) {
             />
           )}
         </div>
+
+ 
+
       </DialogContent>
 
       <DialogActions>
