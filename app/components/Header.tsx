@@ -34,6 +34,12 @@ const Header = () => {
             >
               Contact
             </Link>
+             <Link
+              href="/about"
+              className={pathname === "/about" ? "active" : ""}
+            >
+              About us
+            </Link>
           </nav>
         </>
       )}
