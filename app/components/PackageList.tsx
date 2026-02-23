@@ -122,6 +122,7 @@ useEffect(() => {
           </div>
           
           {/* ✅ PAGINATION CONTROLS (HERE) */}
+          {/* pa */}
   <div className="pagination">
     <button
       disabled={page === 1}
