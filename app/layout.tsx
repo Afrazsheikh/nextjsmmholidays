@@ -9,7 +9,7 @@ export const metadata = {
   title: "MM Holidays",
   description: "Best travel packages",
   verification: {
-    google: "YOUR_GOOGLE_VERIFICATION_CODE", // paste from search console
+    google: "jqdcvh2EUC0dPqq3naqGU2cy6HRVydIN1jbqotdqv8g", // paste from search console
   },
 };
 
