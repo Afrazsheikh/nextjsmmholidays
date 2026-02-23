@@ -1,0 +1,152 @@
+/* ===== HEADER MAIN ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 15px 40px;
+
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== LOGO ===== */
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #0070f3;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  color: #005bb5;
+}
+
+/* ===== CENTER SEARCH ===== */
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== NAV ===== */
+.nav {
+  display: flex;
+  gap: 25px;
+  align-items: center;
+}
+
+.nav a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #333;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+/* Hover underline animation */
+.nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 0%;
+  height: 2px;
+  background: #0070f3;
+  transition: 0.3s ease;
+}
+
+.nav a:hover::after {
+  width: 100%;
+}
+
+.nav a:hover {
+  color: #0070f3;
+}
+
+/* Active link */
+.nav a.active {
+  color: #0070f3;
+  font-weight: 600;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .header {
+    padding: 15px 20px;
+  }
+
+  .header-center {
+    display: none; /* hide search on small screen */
+  }
+
+  .nav {
+    gap: 15px;
+  }
+}
+/* ===== SEARCH WRAPPER ===== */
+.search-wrapper {
+  position: relative;
+  width: 320px;
+  transition: all 0.3s ease;
+}
+
+/* Expand effect on hover */
+.search-wrapper:hover {
+  transform: scale(1.03);
+}
+
+/* Target actual input inside SearchBar */
+.search-wrapper input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 50px; /* FULL ROUND */
+  border: 1px solid #e0e0e0;
+  outline: none;
+
+  font-size: 14px;
+  background: #ffffff;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+
+  transition: all 0.3s ease;
+}
+
+/* Focus animation */
+.search-wrapper input:focus {
+  border: 1px solid #0070f3;
+  box-shadow: 0 0 0 4px rgba(0, 112, 243, 0.15);
+  transform: scale(1.05);
+}
+
+/* Placeholder styling */
+.search-wrapper input::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+/* ===== LOGO ONLY ===== */
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.logo-img {
+  border-radius: 50%;
+  object-fit: cover;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 112, 243, 0.25);
+}
+
+.logo:hover .logo-img {
+  transform: scale(1.08);
+}

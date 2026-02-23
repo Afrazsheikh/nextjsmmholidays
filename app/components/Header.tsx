@@ -4,7 +4,11 @@ import React from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import SearchBar from "./helpers/SearchBar";
-import "./home.css";
+import Image from "next/image";
+
+import "./header.css";
+
+
 
 const Header = () => {
   const pathname = usePathname();
@@ -14,15 +18,26 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="logo">MM Holidays</div>
+<div className="logo" onClick={() => router.push("/")}>
+  <Image
+    src="/images/logo-header.jpeg"
+    alt="MM Holidays Logo"
+    width={150}
+   height={130}
+    className="logo-img"
+  />
+</div>
 
       {!isAdminRoute && (
         <>
-          <div className="header-center">
-            <SearchBar
-              onSelect={(pkg:any) => router.push(`/package/${pkg.id}`)}
-            />
-          </div>
+    <div className="header-center">
+  <div className="search-wrapper">
+    <SearchBar
+      onSelect={(pkg:any) => router.push(`/package/${pkg.id}`)}
+    />
+  </div>
+</div>
+
 
           <nav className="nav">
             <Link href="/" className={pathname === "/" ? "active" : ""}>

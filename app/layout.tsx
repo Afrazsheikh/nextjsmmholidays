@@ -3,10 +3,14 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ApplyGlobalStyles from "./components/ApplyGlobalStyles";
 import WelcomeCard from "./components/WelcomeCards";
+import Script from "next/script";
 
 export const metadata = {
   title: "MM Holidays",
   description: "Best travel packages",
+  verification: {
+    google: "YOUR_GOOGLE_VERIFICATION_CODE", // paste from search console
+  },
 };
 
 export default async function RootLayout({
@@ -38,6 +42,21 @@ console.log(settings);
         <Header />
         <main>{children}</main>
         <Footer />
+         {/* ✅ Google Analytics */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+          strategy="afterInteractive"
+        />
+
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
+          `}
+        </Script>
+
       </body>
     </html>
   );

@@ -1,35 +1,107 @@
 .contact-page {
-  max-width: 700px;
+  padding: 60px 20px;
+  max-width: 1200px;
   margin: auto;
-  padding: 40px 20px;
-  color: #333;
+}
+
+.contact-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 30px;
 }
 
 .contact-card {
-  background: rgba(255, 255, 255, 0.9);
-  padding: 16px;
-  border-radius: 10px;
-  margin: 20px 0;
+  background: #f9f9f9;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.contact-card a {
+  color: #0070f3;
+  text-decoration: none;
+}
+
+.contact-card a:hover {
+  text-decoration: underline;
+}
+
+.map-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+.map-container iframe {
+  border: none;
+  width: 100%;
+  height: 350px;
 }
 
 .contact-form {
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 15px;
 }
 
 .contact-form input,
 .contact-form textarea {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
 }
 
-.contact-form button {
-  background: #1976d2;
+/* .contact-form button {
+  padding: 12px;
+  background: #0070f3;
   color: white;
-  padding: 10px;
-  border-radius: 6px;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
+} */
+
+.contact-form button:hover {
+  background: #005bb5;
+}
+
+@media (max-width: 768px) {
+  .contact-container {
+    grid-template-columns: 1fr;
+  }
+}
+/* Heading & Subtitle White */
+.contact-page h1 {
+  color: #ffffff;
+}
+
+.contact-page > p {
+  color: #ffffff;
+}
+
+/* Form Text White */
+.contact-form input,
+.contact-form textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: transparent;
+  color: #ffffff; /* TEXT WHITE */
+}
+
+/* Placeholder White (Important) */
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Button improve visibility */
+.contact-form button {
+  padding: 12px;
+  background: #0070f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
 }
