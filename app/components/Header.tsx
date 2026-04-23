@@ -1,64 +1,83 @@
 "use client";
 
-import React from "react";
-import { usePathname, useRouter } from "next/navigation";
-import Link from "next/link";
-import SearchBar from "./helpers/SearchBar";
-import Image from "next/image";
-
+import React, { useState } from "react";
+import { usePathname } from "next/navigation";
 import "./header.css";
-
-
 
 const Header = () => {
   const pathname = usePathname();
-  const router = useRouter();
-
   const isAdminRoute = pathname.startsWith("/admin");
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleScroll = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      setMenuOpen(false); // close menu after click
+    }
+  };
+
   return (
-    <header className="header">
-<div className="logo" onClick={() => router.push("/")}>
-  <Image
-    src="/images/logo-header.jpeg"
-    alt="MM Holidays Logo"
-    width={150}
-   height={130}
-    className="logo-img"
-  />
-</div>
+    <nav className="main-nav">
+      {/* LOGO */}
+      <div className="nav-logo" onClick={() => handleScroll("top")}>
+        <div className="logo-mark">MM</div>
+        <div className="logo-text">
+          <strong>MM Holidays</strong>
+          <span>Co. Ltd. · Bangkok</span>
+        </div>
+      </div>
 
-      {!isAdminRoute && (
-        <>
-    <div className="header-center">
-  <div className="search-wrapper">
-    <SearchBar
-      onSelect={(pkg:any) => router.push(`/package/${pkg.id}`)}
-    />
-  </div>
-</div>
+      {/* HAMBURGER */}
+      <div
+        className={`hamburger ${menuOpen ? "active" : ""}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        ☰
+      </div>
 
+      {/* NAV LINKS */}
+      <ul className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <li>
+          <button onClick={() => handleScroll("packages")}>✈️ Flights</button>
+        </li>
+        <li>
+          <button onClick={() => handleScroll("packages")}>🏨 Hotels</button>
+        </li>
+        <li>
+          <button onClick={() => handleScroll("experiences")}>
+            🏄 Adventure
+          </button>
+        </li>
+        <li>
+          <button onClick={() => handleScroll("packages")}>🗺️ Packages</button>
+        </li>
+        <li>
+          <button onClick={() => handleScroll("blog")}>📝 Blog</button>
+        </li>
+        <li>
+          <button onClick={() => handleScroll("about")}>🏢 About Us</button>
+        </li>
 
-          <nav className="nav">
-            <Link href="/" className={pathname === "/" ? "active" : ""}>
-              Home
-            </Link>
-            <Link
-              href="/contact"
-              className={pathname === "/contact" ? "active" : ""}
-            >
-              Contact
-            </Link>
-             <Link
-              href="/about"
-              className={pathname === "/about" ? "active" : ""}
-            >
-              About us
-            </Link>
-          </nav>
-        </>
-      )}
-    </header>
+        {/* MOBILE ACTIONS */}
+        <div className="mobile-actions">
+          <button className="btn-ghost">Sign In</button>
+          <button className="btn-primary">Plan Your Trip ✨</button>
+        </div>
+      </ul>
+
+      {/* DESKTOP ACTIONS */}
+      <div className="nav-actions">
+        <button className="btn-ghost">Sign In</button>
+        <button
+          className="btn-primary"
+          onClick={() => handleScroll("packages")}
+        >
+          Plan Your Trip ✨
+        </button>
+      </div>
+    </nav>
   );
 };
 

@@ -4,8 +4,15 @@ import { useState, useEffect } from "react";
 import PackageCard from "./PackageCard";
 import SelectedStack from "./SelectedStack";
 import WelcomeCard from "./WelcomeCards";
-import "../style/packages.css";
+import Categories from "./Categories";
+import WhyUs from "./Whyus";
 import LiveToursSection from "./LiveToursSection";
+import Review from "./Reviews";
+import ExpAndBlog from "./ExpAndBlog";
+import AboutCTA from "./AboutCTA";
+// import Review  from "./Reviews";
+
+import "../style/packages.css";
 
 type Package = {
   _id: string;
@@ -22,81 +29,77 @@ type Package = {
   imageUrl: string;
 };
 
-
 export default function PackageList() {
   const [allPackages, setAllPackages] = useState<Package[]>([]);
-    const [selected, setSelected] = useState<Package[]>([]);
-const [packages, setPackages] = useState<Package[]>([]);
+  const [selected, setSelected] = useState<Package[]>([]);
+  const [packages, setPackages] = useState<Package[]>([]);
   const [openModal, setOpenModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-const [page, setPage] = useState(1);
-const [totalPages, setTotalPages] = useState(1);
-    
-     /* ---------- Load Packages ---------- */
-// const loadPackages = async () => {
-//   try {
-//     setLoading(true);
-//     setError("");
+  const [error, setError] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
-//     const res = await fetch("/api/packages");
+  /* ---------- Load Packages ---------- */
+  // const loadPackages = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setError("");
 
-//     if (!res.ok) {
-//       throw new Error("Failed to fetch packages");
-//     }
+  //     const res = await fetch("/api/packages");
 
-//     const data = await res.json();
-// console.log(data);
+  //     if (!res.ok) {
+  //       throw new Error("Failed to fetch packages");
+  //     }
 
-//     // ✅ FIX HERE
-//     //   setPackages(data);
-//       setAllPackages(data)
-//   } catch (err: unknown) {
-//     setError(err instanceof Error ? err.message : "Something went wrong");
-//   } finally {
-//     setLoading(false);
-//   }
-// };
-const loadPackages = async (pageNumber = 1) => {
-  try {
-    setLoading(true);
-    setError("");
+  //     const data = await res.json();
+  // console.log(data);
 
-    const res = await fetch(`/api/packages?page=${pageNumber}&limit=6`);
+  //     // ✅ FIX HERE
+  //     //   setPackages(data);
+  //       setAllPackages(data)
+  //   } catch (err: unknown) {
+  //     setError(err instanceof Error ? err.message : "Something went wrong");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+  const loadPackages = async (pageNumber = 1) => {
+    try {
+      setLoading(true);
+      setError("");
 
-    if (!res.ok) throw new Error("Failed to fetch packages");
+      const res = await fetch(`/api/packages?page=${pageNumber}&limit=6`);
 
-    const data = await res.json(); // ✅ THIS IS THE DATA
+      if (!res.ok) throw new Error("Failed to fetch packages");
 
-    console.log("📦 API DATA:", data);
+      const data = await res.json(); // ✅ THIS IS THE DATA
+
+      console.log("📦 API DATA:", data);
 
       setPackages(data.packages);
       setAllPackages(data.packages);
-    setTotalPages(data.pagination.totalPages);
-    setPage(data.pagination.page);
-  } catch (err: unknown) {
-    setError(err instanceof Error ? err.message : "Something went wrong");
-  } finally {
-    setLoading(false);
-  }
-};
+      setTotalPages(data.pagination.totalPages);
+      setPage(data.pagination.page);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    loadPackages(page);
+  }, [page]);
 
-useEffect(() => {
-  loadPackages(page);
-}, [page]);
-
-
-
-//   useEffect(() => {
-//     fetch(
-//       "https://raw.githubusercontent.com/afrazsheikh/mmholidays/main/packages.json"
-//     )
-//       .then((res) => res.json())
-//       .then((data) => setAllPackages(data.packages))
-//       .catch((err) => console.error("Error fetching packages:", err));
-//   }, []);
+  //   useEffect(() => {
+  //     fetch(
+  //       "https://raw.githubusercontent.com/afrazsheikh/mmholidays/main/packages.json"
+  //     )
+  //       .then((res) => res.json())
+  //       .then((data) => setAllPackages(data.packages))
+  //       .catch((err) => console.error("Error fetching packages:", err));
+  //   }, []);
 
   const toggleSelect = (pkg: Package) => {
     setSelected((prev) =>
@@ -110,7 +113,9 @@ useEffect(() => {
     <section>
       <WelcomeCard />
 
-      <div className="packages-grid">
+      <Categories />
+
+      <div id="packages" className="packages-grid">
         {allPackages.map((pkg) => (
           <PackageCard
             key={pkg._id}
@@ -119,40 +124,41 @@ useEffect(() => {
             onToggleSelect={() => toggleSelect(pkg)}
           />
         ))}
-          </div>
-          
-          {/* ✅ PAGINATION CONTROLS (HERE) */}
-          {/* pa */}
-  <div className="pagination">
-    <button
-      disabled={page === 1}
-      onClick={() => setPage((p) => p - 1)}
-    >
-      ← Previous
-    </button>
+      </div>
 
-    <span>
-      Page {page} of {totalPages}
-    </span>
+      {/* ✅ PAGINATION CONTROLS (HERE) */}
+      {/* pa */}
+      <div className="pagination">
+        <button disabled={page === 1} onClick={() => setPage((p) => p - 1)}>
+          ← Previous
+        </button>
 
-    <button
-      disabled={page === totalPages}
-      onClick={() => setPage((p) => p + 1)}
-    >
-      Next →
-    </button>
-  </div>
+        <span>
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+        >
+          Next →
+        </button>
+      </div>
 
       {/* 🔥 SHOW SELECTED STACK */}
-     {selected.length > 0 && (
-  <SelectedStack
-    selected={selected}
-    onRemove={(id) =>
-      setSelected((prev) => prev.filter((p) => p._id !== id))
-    }
-  />
-)}
-    <LiveToursSection />
+      {selected.length > 0 && (
+        <SelectedStack
+          selected={selected}
+          onRemove={(id) =>
+            setSelected((prev) => prev.filter((p) => p._id !== id))
+          }
+        />
+      )}
+      <LiveToursSection />
+      <WhyUs />
+      <Review />
+      <ExpAndBlog />
+      <AboutCTA />
     </section>
   );
 }
