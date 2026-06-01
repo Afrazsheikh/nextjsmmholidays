@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import "./header.css";
-
+import Image from "next/image";
 const Header = () => {
   const pathname = usePathname();
   const isAdminRoute = pathname.startsWith("/admin");
@@ -22,10 +22,19 @@ const Header = () => {
     <nav className="main-nav">
       {/* LOGO */}
       <div className="nav-logo" onClick={() => handleScroll("top")}>
-        <div className="logo-mark">MM</div>
+        {/* <div className="logo-mark">MM</div>
         <div className="logo-text">
           <strong>MM Holidays</strong>
           <span>Co. Ltd. · Bangkok</span>
+        </div> */}
+        <div className="logo-image">
+          <Image
+            src="images/logo.jpg"
+            alt="MM Holidays Logo"
+            width={50}
+            height={50}
+            priority
+          />
         </div>
       </div>
 

@@ -202,3 +202,35 @@
     width: 100%;
   }
 }
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.logo-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-image img {
+  border-radius: 50%; /* optional */
+  object-fit: contain;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-text strong {
+  line-height: 1.2;
+}
+
+.logo-text span {
+  font-size: 0.85rem;
+}
