@@ -31,8 +31,8 @@ const Header = () => {
           <Image
             src="images/logo.jpeg"
             alt="MM Holidays Logo"
-            width={60}
-            height={60}
+            width={80}
+            height={80}
             priority
           />
         </div>
